@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <link rel="stylesheet" href="photos.css">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="A front-end template that helps you build fast, modern mobile web apps.">
@@ -57,33 +58,29 @@
       </header>
       <main class="mdl-layout__content">
         <div class="mdl-layout__tab-panel is-active" id="overview">
-          <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
-            <div class="mdl-card mdl-cell mdl-cell--12-col">
-              <div class="mdl-card__supporting-text">
-                <h4>Search NASA's Image and Video Library</h4>
+		  
 
-				<table>
-				<tr>
-				<td>
-				<form action="#">
-				  <div class="mdl-textfield mdl-js-textfield">
-					<input class="mdl-textfield__input" type="text" id="sample1">
-					<label class="mdl-textfield__label" for="sample1">Search for... (e.g. "Orion")</label>
-				  </div>
-				</form>
-				</td>
-				<td>
-				<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-				  Search
-				</button>
-				</td>
-				</tr>
-				</table>
+		  <div class="mdl-grid" style="justify-content: center">
+			  <div class="mdl-card mdl-cell mdl-cell--2-col mdl-shadow--2dp mdl-cell--top"><div class="mdl-card__supporting-text mdl-cell--top">
+Side</div></div>
+			  <div class="mdl-card mdl-cell mdl-cell--8-col mdl-cell--middle mdl-shadow--2dp"><div class="mdl-card__supporting-text">
+			  <h4 id="numbers"></h4>
+			  <section id="photos">
 
+			</section>
+			<br>
+			<br>
+			<center>
+			<button onclick="next()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+			  Next
+			</button>
+			</center>
 
-				</div>
-            </div>
-          </section>
+<center><div class="mdl-spinner mdl-js-spinner is-active" id="loading"></div></center>
+</div></div>
+
+		  </div>
+		
         </div>
 		<br>
 		<br>
@@ -164,6 +161,7 @@
 		
       </main>
     </div>
+	<script type="text/javascript" src="app.js"></script>
     <script src="https://code.getmdl.io/1.3.0/material.min.js"></script>
   </body>
 </html>
