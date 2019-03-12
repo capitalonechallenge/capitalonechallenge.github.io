@@ -23,6 +23,8 @@ function search2() {
 }
 
 document.getElementById('previous').style.display = "none";
+document.getElementById('next').style.display = "none";
+
 
 function parse(result){
 	var parsed = JSON.parse(result);
@@ -33,7 +35,13 @@ function parse(result){
 	var url = new URL(url_string);
 	var search_val = url.searchParams.get("q");
 	var page_num = url.searchParams.get("page");
-	document.getElementById('numbers').innerHTML = String(1+(page_num-1)*100)+"-"+String(page_num*100) + " of " + String(total) + " for \"" + search_val + "\":";
+	if((page_num*100) < total)
+	{
+		document.getElementById('numbers').innerHTML = String(1+(page_num-1)*100)+"-"+String(page_num*100) + " of " + String(total) + " for \"" + search_val + "\":";
+	}
+	else{
+		document.getElementById('numbers').innerHTML = String(1+(page_num-1)*100)+"-"+String(total) + " of " + String(total) + " for \"" + search_val + "\":";
+	}
 	var pictures = parsed.collection.items;
 	display_images(pictures);
 	
@@ -53,6 +61,8 @@ function parse(result){
 	var params = next_url.split("?")[1];
 	nexturl = "search.html?" + String(params);
 	//alert(String(params));
+	
+	document.getElementById('next').style.display = "block";		
 }
 
 function next(){
@@ -63,21 +73,38 @@ function previous(){
 	window.location.href = previousurl;
 }
 
-function img_create(src) {
+function img_create(src, key) {	  
+	var span = document.createElement('span')
+	var dialog = document.createElement('span')
+
 	var img = new Image(); 
 	img.src = src;
-    return img;
+	img.setAttribute('id',key);
+
+	img.setAttribute('onclick','clicked(this.id)');
+	span.appendChild(img)
+	dialog.innerHTML = "<dialog class='backdrop' id='dialog" + key + "'>I'm a dialog!<br><br><form method='dialog'><input type='submit' value='Close'/></form></dialog>";
+	span.appendChild(dialog)
+    return span;
 }
 
+function clicked(id){
+ var dialog = document.getElementById('dialog'+id);
+ dialog.showModal();
+ }
+
+ 
 function display_images(images)
 {
-	document.getElementById('loading').style.display = "none";
 	var image_spot = document.getElementById('photos');
 	for (var key in images) {
 		var url = images[key].links[0].href;
-		var image = img_create(url);
+		var image = img_create(url, key);
 		image_spot.appendChild(image);
+		//var span = span_create();
+		//image_spot.appendChild(span);
 	}
+	document.getElementById('loading').style.display = "none";
 }
 
 /*

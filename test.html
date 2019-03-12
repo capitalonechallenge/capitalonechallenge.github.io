@@ -1,0 +1,18 @@
+<head>
+  <link rel="stylesheet" type="text/css" href="dist/dialog-polyfill.css" />
+</head>
+<body>
+  <dialog class="backdrop">
+    I'm a dialog!
+    <form method="dialog">
+      <input type="submit" value="Close" />
+    </form>
+  </dialog>
+
+  <script src="dist/dialog-polyfill.js"></script>
+  <script>
+    var dialog = document.querySelector('dialog');
+    dialogPolyfill.registerDialog(dialog);
+    dialog.showModal();
+  </script>
+</body>
