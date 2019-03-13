@@ -8,6 +8,8 @@ function search() {
 var sPath = window.location.pathname;
 var sPage = sPath.substring(sPath.lastIndexOf('/') + 1);
 if(sPage == "search.html"){
+	document.getElementById('previous').style.display = "none";
+	document.getElementById('next').style.display = "none";
 	search2();
 }
 
@@ -22,8 +24,6 @@ function search2() {
 	var result = httpGetAsync(query, parse);
 }
 
-document.getElementById('previous').style.display = "none";
-document.getElementById('next').style.display = "none";
 
 
 var sPath = window.location.pathname;
@@ -44,20 +44,57 @@ function load_metadata(){
 
 function load_text(result){
 	var parsed = JSON.parse(result);
-	//var title = parsed.AVAIL:Title;
-	alert("here");
-	/*
-	var date = 
-	var center = 
-	var description = 
-	var photographer = 
-	var location_data = 
-	var keywords = 
-	var nasa_id = 
-	var owner = 
-	var secondary_creator = 
-	var album = 
-	*/
+	var title = parsed["AVAIL:Title"];
+	var date = parsed["AVAIL:DateCreated"];
+	var center = parsed["AVAIL:Center"];
+	var description = parsed["AVAIL:Description"];
+	var nasa_id = parsed["AVAIL:NASAID"];
+
+	var photographer = parsed["AVAIL:Photographer"];
+	var location_data = parsed["AVAIL:Location"];
+	var keywords = parsed["AVAIL:Keywords"];
+	var owner = parsed["AVAIL:Owner"];
+	var secondary_creator = parsed["AVAIL:SecondaryCreator"];
+	var album = parsed["AVAIL:Album"];
+	
+	var meta = document.getElementById('meta_data');
+
+	var title_h = document.getElementById('title');
+	var loading = document.getElementById('loading');
+	loading.style.display = "none";
+	
+	title_h.innerHTML = title;
+	
+	meta.innerHTML += "<b>Date Created:</b> " + date + "<br><br>";
+	meta.innerHTML += "<b>Center:</b> " + center + "<br><br>";
+	meta.innerHTML += "<b>NASA ID:</b> " + nasa_id + "<br><br>";
+
+	if(photographer != ""){
+		meta.innerHTML += "<b>Photographer:</b> " + photographer + "<br><br>";
+	}
+	if(location_data != ""){
+		meta.innerHTML += "<b>Location:</b> " + location_data + "<br><br>";
+	}
+	if(owner != ""){
+		meta.innerHTML += "<b>Owner:</b> " + owner + "<br><br>";
+	}
+	if(secondary_creator != ""){
+		meta.innerHTML += "<b>Secondary Creator:</b> " + secondary_creator + "<br><br>";
+	}
+	if(album != ""){
+		meta.innerHTML += "<b>Album:</b> " + album + "<br><br>";
+	}
+	
+	meta.innerHTML += "<b>Keywords:</b> ";
+
+	for (index = 0; index < keywords.length; ++index) {
+		meta.innerHTML += "<span class='mdl-chip'><span class='mdl-chip__text'>" + keywords[index] + "</span></span>&nbsp;";
+	}
+
+	meta.innerHTML += "<br><br>";
+	
+	meta.innerHTML += "<i>" + description;
+
 }
 
 
