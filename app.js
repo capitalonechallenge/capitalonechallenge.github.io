@@ -26,6 +26,61 @@ document.getElementById('previous').style.display = "none";
 document.getElementById('next').style.display = "none";
 
 
+var sPath = window.location.pathname;
+var sPage = sPath.substring(sPath.lastIndexOf('/') + 1);
+if(sPage == "display.html"){
+	load_image();
+	load_metadata();
+}
+
+function load_metadata(){
+	var url_string = window.location.href
+	var url = new URL(url_string);
+	var nasa_id = url.searchParams.get("nasa_id");
+	
+	var query = "https://images-assets.nasa.gov/image/" + nasa_id + "/metadata.json";
+	var result = httpGetAsync(query, load_text);
+}
+
+function load_text(result){
+	var parsed = JSON.parse(result);
+	//var title = parsed.AVAIL:Title;
+	alert("here");
+	/*
+	var date = 
+	var center = 
+	var description = 
+	var photographer = 
+	var location_data = 
+	var keywords = 
+	var nasa_id = 
+	var owner = 
+	var secondary_creator = 
+	var album = 
+	*/
+}
+
+
+function load_image(){
+	var url_string = window.location.href
+	var url = new URL(url_string);
+	var nasa_id = url.searchParams.get("nasa_id");
+	
+	var query = "https://images-api.nasa.gov/asset/" + nasa_id;
+	var result = httpGetAsync(query, large_image);
+}
+
+function large_image(result){
+	var parsed = JSON.parse(result);
+	var image_url = parsed.collection.items[1].href;
+	var image_spot = document.getElementById('side_image');
+	var img = new Image(); 
+	img.src = image_url;
+	img.setAttribute('width',"100%");
+	image_spot.appendChild(img);
+}
+
+
 function parse(result){
 	var parsed = JSON.parse(result);
 	var total = parsed.collection.metadata.total_hits;
@@ -73,19 +128,17 @@ function previous(){
 	window.location.href = previousurl;
 }
 
-function img_create(src, key) {	  
-	var span = document.createElement('span')
-	var dialog = document.createElement('span')
+function img_create(src, key, data) {	  
+	var alink = document.createElement('a')
+	alink.setAttribute('href',"display.html?nasa_id="+data.nasa_id);
 
 	var img = new Image(); 
 	img.src = src;
 	img.setAttribute('id',key);
-
-	img.setAttribute('onclick','clicked(this.id)');
-	span.appendChild(img)
-	dialog.innerHTML = "<dialog class='backdrop' id='dialog" + key + "'>I'm a dialog!<br><br><form method='dialog'><input type='submit' value='Close'/></form></dialog>";
-	span.appendChild(dialog)
-    return span;
+	alink.appendChild(img)
+	
+	//dialog.innerHTML = "<dialog class='backdrop' id='dialog" + key + "'><img src='" + src + "' width='auto' height='80%'><table><tr><td><b>" + data.title + "</b></td></tr><tr><td>" + data.description + "</td></tr><tr><td>Date:" + data.date_created + "</td></tr><tr><td>Center:" + data.center + "</td></tr><tr><td>Photographer:" + data.photographer + "</td></tr><tr><td>Location:" + data.location + "</td></tr><tr><td>NASA ID:" + data.nasa_id + "</td></tr><tr><td><form method='dialog'><input type='submit' value='Close'/></form></td></tr></table></dialog>";
+    return alink;
 }
 
 function clicked(id){
@@ -99,7 +152,8 @@ function display_images(images)
 	var image_spot = document.getElementById('photos');
 	for (var key in images) {
 		var url = images[key].links[0].href;
-		var image = img_create(url, key);
+		var data = images[key].data[0];
+		var image = img_create(url, key, data);
 		image_spot.appendChild(image);
 		//var span = span_create();
 		//image_spot.appendChild(span);
