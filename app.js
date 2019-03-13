@@ -94,9 +94,12 @@ function load_text(result){
 	meta.innerHTML += "<br><br>";
 	
 	meta.innerHTML += "<i>" + description;
-
+	meta.innerHTML += "<br><br><button onclick='back();' class='mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent'>Back</button>"
 }
 
+function back(){
+	window.history.back();
+}
 
 function load_image(){
 	var url_string = window.location.href
@@ -111,6 +114,9 @@ function large_image(result){
 	var parsed = JSON.parse(result);
 	var image_url = parsed.collection.items[1].href;
 	var image_spot = document.getElementById('side_image');
+	
+	document.getElementById('loading_photo').style.display = "none";
+	
 	var img = new Image(); 
 	img.src = image_url;
 	img.setAttribute('width',"100%");
