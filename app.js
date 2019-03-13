@@ -1,8 +1,3 @@
-function search() {
-	var search_val = document.getElementById('search').value;
-	var queryString = "?media_type=image&page=1&q=" + search_val;	
-	window.location.href = "search.html" + queryString;
-}
 
 
 var sPath = window.location.pathname;
@@ -11,7 +6,20 @@ if(sPage == "search.html"){
 	document.getElementById('previous').style.display = "none";
 	document.getElementById('next').style.display = "none";
 	search2();
+	var url_string = window.location.href
+	var url = new URL(url_string);
+	var search = url.searchParams.get("q");
+	
+	var search_bar = document.getElementById('search');
+	search_bar.setAttribute('value',String(search));
 }
+
+function search() {
+	var search_val = document.getElementById('search').value;
+	var queryString = "?media_type=image&year_start=1920&year_end=2019&page=1&q=" + search_val;	
+	window.location.href = "search.html" + queryString;
+}
+
 
 var nexturl;
 var previousurl;
@@ -32,6 +40,9 @@ if(sPage == "display.html"){
 	load_image();
 	load_metadata();
 }
+
+
+
 
 function load_metadata(){
 	var url_string = window.location.href
