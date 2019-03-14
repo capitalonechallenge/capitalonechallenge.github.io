@@ -175,6 +175,15 @@ function large_image(result){
 
 function parse(result){
 	var parsed = JSON.parse(result);
+	
+	if(Object.keys(parsed.collection.items).length == 0)
+	{
+		document.getElementById('numbers').innerHTML = "No Results Found!";
+		var loading = document.getElementById('loading');
+		loading.style.display = "none";
+		return;
+	}
+	//alert(parsed);
 	var total = parsed.collection.metadata.total_hits;
 	//document.getElementById('numbers').innerHTML = result;
 	
@@ -268,12 +277,24 @@ left_hide.style.visibility = 'hidden';
 right_hide.style.visibility = 'hidden';
 */
 
+
+function error()
+{
+		document.getElementById('numbers').innerHTML = "No Results Found!";
+		var loading = document.getElementById('loading');
+		loading.style.display = "none";
+}
+
 function httpGetAsync(theUrl, callback)
 {
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.onreadystatechange = function() { 
         if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
             callback(xmlHttp.responseText);
+		if(xmlHttp.status == 400)
+			error();
+		if(xmlHttp.status == 404)
+			error();
     }
     xmlHttp.open("GET", "https://cors-anywhere.herokuapp.com/" + theUrl, true); // true for asynchronous 
     xmlHttp.send(null);
