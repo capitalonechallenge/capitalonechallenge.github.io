@@ -275,7 +275,7 @@ function httpGetAsync(theUrl, callback)
         if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
             callback(xmlHttp.responseText);
     }
-    xmlHttp.open("GET", theUrl, true); // true for asynchronous 
+    xmlHttp.open("GET", "https://cors-anywhere.herokuapp.com/" + theUrl, true); // true for asynchronous 
     xmlHttp.send(null);
 }
 
