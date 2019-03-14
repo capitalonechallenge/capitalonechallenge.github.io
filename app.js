@@ -9,9 +9,28 @@ if(sPage == "search.html"){
 	var url_string = window.location.href
 	var url = new URL(url_string);
 	var search = url.searchParams.get("q");
-	
+	var start = url.searchParams.get("year_start");
+	var end = url.searchParams.get("year_end");
+	var location_data = url.searchParams.get("location");
+	var photographer = url.searchParams.get("photographer");
+
 	var search_bar = document.getElementById('search');
+	var start_bar = document.getElementById('start');
+	var end_bar = document.getElementById('end');
+	var location_bar = document.getElementById('location');
+	var photographer_bar = document.getElementById('photographer');
+
 	search_bar.setAttribute('value',String(search));
+	start_bar.setAttribute('value',String(start));
+	end_bar.setAttribute('value',String(end));
+	if(location_data != null)
+	{
+		location_bar.setAttribute('value',String(location_data));
+	}
+	if(photographer != null)
+	{
+		photographer_bar.setAttribute('value',String(photographer));
+	}
 }
 
 function search() {
@@ -20,6 +39,22 @@ function search() {
 	window.location.href = "search.html" + queryString;
 }
 
+
+function searchme() {
+	var search_val = document.getElementById('search').value;
+	var start_year = document.getElementById('start').value;
+	var end_year = document.getElementById('end').value;
+	var location_data = document.getElementById('location').value;
+	var photographer = document.getElementById('photographer').value;
+
+	var queryString = "?media_type=image&year_start=" + start_year + "&year_end=" + end_year + "&location=" + location_data + "&photographer=" + photographer + "&page=1&q=" + search_val;	
+
+	window.location.href = "search.html" + queryString;
+}
+
+function testing(){
+	alert("yo!");
+}
 
 var nexturl;
 var previousurl;
@@ -96,13 +131,16 @@ function load_text(result){
 		meta.innerHTML += "<b>Album:</b> " + album + "<br><br>";
 	}
 	
-	meta.innerHTML += "<b>Keywords:</b> ";
+	if(keywords.length > 1)
+	{
+		meta.innerHTML += "<b>Keywords:</b> ";
 
-	for (index = 0; index < keywords.length; ++index) {
-		meta.innerHTML += "<span class='mdl-chip'><span class='mdl-chip__text'>" + keywords[index] + "</span></span>&nbsp;";
+		for (index = 0; index < keywords.length; ++index) {
+			meta.innerHTML += "<span class='mdl-chip'><span class='mdl-chip__text'>" + keywords[index] + "</span></span>&nbsp;";
+		}
+		meta.innerHTML += "<br><br>";
 	}
 
-	meta.innerHTML += "<br><br>";
 	
 	meta.innerHTML += "<i>" + description;
 	meta.innerHTML += "<br><br><button onclick='back();' class='mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent'>Back</button>"
@@ -164,15 +202,22 @@ function parse(result){
 		
 		document.getElementById('previous').style.display = "block";		
 	}
-	if(size == 1){
+	if(size == 1 && parsed.collection.links[0]["prompt"] == "Next"){
 		var next_url = parsed.collection.links[0].href;
+		var params = next_url.split("?")[1];
+		nexturl = "search.html?" + String(params);	
+		document.getElementById('next').style.display = "block";
 	}
-	var params = next_url.split("?")[1];
-	nexturl = "search.html?" + String(params);
-	//alert(String(params));
+	else if(size == 1)
+	{
+		var next_url = parsed.collection.links[0].href;
+		var params = next_url.split("?")[1];
+		previousurl = "search.html?" + String(params);	
+		document.getElementById('previous').style.display = "block";		
+	}
 	
-	document.getElementById('next').style.display = "block";		
 }
+
 
 function next(){
 	window.location.href = nexturl;

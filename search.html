@@ -68,7 +68,7 @@
 				<h4>Filter Results</h4>
 				
 				<h6 style="margin: 0px 0px 0px 0px; padding: 0px 0px 0px 0px;">Search:</h6>		
-				<form action="javascript:search()">
+				<form action="javascript:searchme()">
 				  <div class="mdl-textfield mdl-js-textfield">
 					<input class="mdl-textfield__input" type="text" id="search" value="">
 					<label class="mdl-textfield__label" for="sample1">Search for... (e.g. "Orion")</label>
@@ -76,7 +76,7 @@
 				</form>
 				
 				<h6 style="margin: 0px 0px 0px 0px; padding: 0px 0px 0px 0px;">Start Year:</h6>		
-				<form action="javascript:search()">
+				<form action="javascript:searchme()">
 				  <div class="mdl-textfield mdl-js-textfield">
 					<input class="mdl-textfield__input" type="text" id="start" value="1920">
 					<label class="mdl-textfield__label" for="sample1">Start Year</label>
@@ -84,7 +84,7 @@
 				</form>
 				
 				<h6 style="margin: 0px 0px 0px 0px; padding: 0px 0px 0px 0px;">End Year:</h6>
-				<form action="javascript:search()">
+				<form action="javascript:searchme()">
 				  <div class="mdl-textfield mdl-js-textfield">
 					<input class="mdl-textfield__input" type="text" id="end" value="2019">
 					<label class="mdl-textfield__label" for="sample1">End Year</label>
@@ -92,14 +92,23 @@
 				</form>
 				
 				<h6 style="margin: 0px 0px 0px 0px; padding: 0px 0px 0px 0px;">Location:</h6>
-				<form action="javascript:search()">
+				<form action="javascript:searchme()">
 				  <div class="mdl-textfield mdl-js-textfield">
 					<input class="mdl-textfield__input" type="text" id="location">
 					<label class="mdl-textfield__label" for="sample1">Filter by Location</label>
 				  </div>
 				</form>
+				
+				<h6 style="margin: 0px 0px 0px 0px; padding: 0px 0px 0px 0px;">Photographer:</h6>
+				<form action="javascript:searchme()">
+				  <div class="mdl-textfield mdl-js-textfield">
+					<input class="mdl-textfield__input" type="text" id="photographer">
+					<label class="mdl-textfield__label" for="sample1">Filter by Photographer</label>
+				  </div>
+				</form>
+				
 				<center>
-				<button onclick="search();" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+				<button onclick="searchme();" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
 				  Update Results
 				</button>
 				</center>
