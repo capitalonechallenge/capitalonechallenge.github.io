@@ -1,11 +1,16 @@
-
-
+//Check if the page is the search page
 var sPath = window.location.pathname;
 var sPage = sPath.substring(sPath.lastIndexOf('/') + 1);
 if(sPage == "search.html"){
+	
+	//Hide the next and previous buttons
 	document.getElementById('previous').style.display = "none";
 	document.getElementById('next').style.display = "none";
-	search2();
+	
+	//Start the Async Get Request to the NASA API
+	search_call();
+	
+	//Pull all the params in the url to load these values into the filtering input fields
 	var url_string = window.location.href
 	var url = new URL(url_string);
 	var search = url.searchParams.get("q");
@@ -20,9 +25,9 @@ if(sPage == "search.html"){
 	var location_bar = document.getElementById('location');
 	var photographer_bar = document.getElementById('photographer');
 
-	search_bar.setAttribute('value',String(search));
-	start_bar.setAttribute('value',String(start));
-	end_bar.setAttribute('value',String(end));
+	search_bar.setAttribute('value', String(search));
+	start_bar.setAttribute('value', String(start));
+	end_bar.setAttribute('value', String(end));
 	if(location_data != null)
 	{
 		location_bar.setAttribute('value',String(location_data));
@@ -33,6 +38,8 @@ if(sPage == "search.html"){
 	}
 }
 
+
+//Search Function called by the homepage to load up the search page with the proper params
 function search() {
 	var search_val = document.getElementById('search').value;
 	var queryString = "?media_type=image&year_start=1920&year_end=2019&page=1&q=" + search_val;	
@@ -40,6 +47,7 @@ function search() {
 }
 
 
+//Function to reload the page with the proper params after the search filters are changed
 function searchme() {
 	var search_val = document.getElementById('search').value;
 	var start_year = document.getElementById('start').value;
@@ -52,14 +60,14 @@ function searchme() {
 	window.location.href = "search.html" + queryString;
 }
 
-function testing(){
-	alert("yo!");
-}
 
+//Global variables to keep the next and previous page urls
 var nexturl;
 var previousurl;
 
-function search2() {
+
+//Do the ASYNC call to the NASA API
+function search_call() {
 	var url_string = window.location.href
 	var params = url_string.split("?")[1];
 	
@@ -68,7 +76,7 @@ function search2() {
 }
 
 
-
+//If the page is the display single image page load up the proper support functions
 var sPath = window.location.pathname;
 var sPage = sPath.substring(sPath.lastIndexOf('/') + 1);
 if(sPage == "display.html"){
@@ -77,8 +85,7 @@ if(sPage == "display.html"){
 }
 
 
-
-
+//Call the ASYNC get request for an image's metadata
 function load_metadata(){
 	var url_string = window.location.href
 	var url = new URL(url_string);
@@ -88,6 +95,7 @@ function load_metadata(){
 	var result = httpGetAsync(query, load_text);
 }
 
+//The callback function to display an image's metadata on the display page
 function load_text(result){
 	var parsed = JSON.parse(result);
 	var title = parsed["AVAIL:Title"];
@@ -146,10 +154,12 @@ function load_text(result){
 	meta.innerHTML += "<br><br><button onclick='back();' class='mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent'>Back</button>"
 }
 
+//Function for the back button on the display page to work
 function back(){
 	window.history.back();
 }
 
+//Function to start the async get request for the large image on the display page
 function load_image(){
 	var url_string = window.location.href
 	var url = new URL(url_string);
@@ -159,6 +169,7 @@ function load_image(){
 	var result = httpGetAsync(query, large_image);
 }
 
+//Callback function to display the large image on the display page
 function large_image(result){
 	var parsed = JSON.parse(result);
 	var image_url = parsed.collection.items[1].href;
@@ -172,10 +183,11 @@ function large_image(result){
 	image_spot.appendChild(img);
 }
 
-
+//Callback function to display the results on the search page
 function parse(result){
 	var parsed = JSON.parse(result);
 	
+	//Handle basically all the errors (sorta)
 	if(Object.keys(parsed.collection.items).length == 0)
 	{
 		document.getElementById('numbers').innerHTML = "No Results Found!";
@@ -191,6 +203,8 @@ function parse(result){
 	var url = new URL(url_string);
 	var search_val = url.searchParams.get("q");
 	var page_num = url.searchParams.get("page");
+	
+	//Set the proper number of images heading
 	if((page_num*100) < total)
 	{
 		document.getElementById('numbers').innerHTML = String(1+(page_num-1)*100)+"-"+String(page_num*100) + " of " + String(total) + " for \"" + search_val + "\":";
@@ -199,8 +213,11 @@ function parse(result){
 		document.getElementById('numbers').innerHTML = String(1+(page_num-1)*100)+"-"+String(total) + " of " + String(total) + " for \"" + search_val + "\":";
 	}
 	var pictures = parsed.collection.items;
+	
+	//Call support function to display all the results in the grid
 	display_images(pictures);
 	
+	//Properly setup the next and previous buttons on the page depending on the situation
 	var size = Object.keys(parsed.collection.links).length;
 	if(size == 2){
 		var next_url = parsed.collection.links[1].href;
@@ -208,8 +225,11 @@ function parse(result){
 		
 		var params = previous_url.split("?")[1];
 		previousurl = "search.html?" + String(params);
+		params = next_url.split("?")[1];
+		nexturl = "search.html?" + String(params);
 		
-		document.getElementById('previous').style.display = "block";		
+		document.getElementById('previous').style.display = "block";
+		document.getElementById('next').style.display = "block";
 	}
 	if(size == 1 && parsed.collection.links[0]["prompt"] == "Next"){
 		var next_url = parsed.collection.links[0].href;
@@ -228,14 +248,17 @@ function parse(result){
 }
 
 
+//Function for the next button on the search page
 function next(){
 	window.location.href = nexturl;
 }
 
+//Function for the previous button on the search page
 function previous(){
 	window.location.href = previousurl;
 }
 
+//Support function for the display_images function to create image elements with the proper links to their display page
 function img_create(src, key, data) {	  
 	var alink = document.createElement('a')
 	alink.setAttribute('href',"display.html?nasa_id="+data.nasa_id);
@@ -249,12 +272,14 @@ function img_create(src, key, data) {
     return alink;
 }
 
+/*
 function clicked(id){
  var dialog = document.getElementById('dialog'+id);
  dialog.showModal();
  }
+*/
 
- 
+//Function to display all the search results in a grid on the search page
 function display_images(images)
 {
 	var image_spot = document.getElementById('photos');
@@ -278,13 +303,15 @@ right_hide.style.visibility = 'hidden';
 */
 
 
+//Function to display an error message on the search page
 function error()
 {
-		document.getElementById('numbers').innerHTML = "No Results Found!";
-		var loading = document.getElementById('loading');
-		loading.style.display = "none";
+	document.getElementById('numbers').innerHTML = "No Results Found!";
+	var loading = document.getElementById('loading');
+	loading.style.display = "none";
 }
 
+//Your favorite async function caller
 function httpGetAsync(theUrl, callback)
 {
     var xmlHttp = new XMLHttpRequest();
@@ -300,6 +327,7 @@ function httpGetAsync(theUrl, callback)
     xmlHttp.send(null);
 }
 
+/*
 function httpGet(theUrl)
 {
     var xmlHttp = new XMLHttpRequest();
@@ -307,3 +335,4 @@ function httpGet(theUrl)
     xmlHttp.send( null );
     return xmlHttp.responseText;
 }
+*/
